@@ -2,6 +2,11 @@
 Кастомные исключения для автоустановщика прокси.
 """
 
+from typing import Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .models import ProxyType
+
 
 class ProxyInstallerError(Exception):
     """Базовое исключение для всех ошибок приложения."""
@@ -35,3 +40,12 @@ class UnsupportedOSError(ProxyInstallerError):
 class InstallationError(ProxyInstallerError):
     """Общая ошибка в процессе установки прокси."""
     pass
+
+
+class InstallerUnavailableError(ProxyInstallerError):
+    """
+    Нет установщика для выбранного типа прокси (не реализовано или ещё в разработке).
+    """
+    def __init__(self, message: str, proxy_type: Optional["ProxyType"] = None) -> None:
+        self.proxy_type = proxy_type
+        super().__init__(message)
