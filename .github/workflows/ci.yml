@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev, iter1, iter2]
+  pull_request:
+    branches: [main, dev, iter1, iter2]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-dev.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Flake8
+        run: flake8 proxy_installer main.py tests
+
+      - name: Mypy
+        run: mypy proxy_installer
+
+      - name: Pytest
+        run: pytest tests/ -v --tb=short
