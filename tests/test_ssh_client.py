@@ -10,14 +10,14 @@ from proxy_installer.ssh_client import ServerConnection
 
 
 def test_execute_command_without_connection_raises() -> None:
-    creds = ServerCredentials(host="10.0.0.1")
+    creds = ServerCredentials(host="10.0.0.1", password="123")
     conn = ServerConnection(creds)
     with pytest.raises(SSHConnectionError, match="Нет активного"):
         conn.execute_command("echo hi")
 
 
 def test_execute_command_success() -> None:
-    creds = ServerCredentials(host="10.0.0.1")
+    creds = ServerCredentials(host="10.0.0.1", password="123")
     conn = ServerConnection(creds)
     mock_client = MagicMock()
     mock_stdout = MagicMock()
@@ -35,7 +35,7 @@ def test_execute_command_success() -> None:
 
 
 def test_execute_command_failure_raises() -> None:
-    creds = ServerCredentials(host="10.0.0.1")
+    creds = ServerCredentials(host="10.0.0.1", password="123")
     conn = ServerConnection(creds)
     mock_client = MagicMock()
     mock_stdout = MagicMock()

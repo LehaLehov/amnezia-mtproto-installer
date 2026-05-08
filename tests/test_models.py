@@ -20,13 +20,42 @@ def test_server_credentials_ok() -> None:
 
 def test_server_credentials_empty_host_raises() -> None:
     with pytest.raises(ValueError, match="пустым"):
-        ServerCredentials(host="")
+        ServerCredentials(host="", password="123")
+
+
+def test_server_credentials_invalid_port_raises() -> None:
+    with pytest.raises(ValueError, match="диапазоне"):
+        ServerCredentials(host="10.0.0.1", port=0, password="123")
+    with pytest.raises(ValueError, match="диапазоне"):
+        ServerCredentials(host="10.0.0.1", port=70000, password="123")
+
+
+def test_server_credentials_empty_username_raises() -> None:
+    with pytest.raises(ValueError, match="пустым"):
+        ServerCredentials(host="10.0.0.1", username="", password="123")
+
+
+def test_server_credentials_no_auth_raises() -> None:
+    with pytest.raises(ValueError, match="пароль"):
+        ServerCredentials(host="10.0.0.1", password=None, key_path=None)
 
 
 def test_mtproto_config_defaults() -> None:
     cfg = MTProtoConfig()
     assert cfg.port == 443
     assert cfg.secret is None
+
+
+def test_mtproto_config_invalid_port_raises() -> None:
+    with pytest.raises(ValueError, match="диапазоне"):
+        MTProtoConfig(port=0)
+
+
+def test_mtproto_config_invalid_secret_raises() -> None:
+    with pytest.raises(ValueError, match="менее 32 символов"):
+        MTProtoConfig(secret="short")
+    with pytest.raises(ValueError, match="только из шестнадцатеричных"):
+        MTProtoConfig(secret="z" * 32)
 
 
 def test_installation_result_defaults() -> None:
