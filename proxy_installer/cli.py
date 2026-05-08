@@ -57,7 +57,29 @@ class CLI:
         """
         Запрашивает у пользователя данные сервера и возвращает валидную модель.
         Оборачивает процесс в цикл, если пользователь ошибся при вводе.
+        Также предлагает выбрать сохраненные сервера.
         """
+        from .server_manager import ServerManager
+        
+        saved = ServerManager.load_servers()
+        if saved:
+            choices = [f"{s['username']}@{s['host']}:{s['port']}" for s in saved] + ["Добавить новый сервер"]
+            choice = questionary.select(
+                "Выбор сервера:",
+                choices=choices
+            ).ask()
+            
+            if choice != "Добавить новый сервер" and choice is not None:
+                idx = choices.index(choice)
+                s = saved[idx]
+                return ServerCredentials(
+                    host=s["host"],
+                    port=s.get("port", 22),
+                    username=s.get("username", "root"),
+                    password=s.get("password"),
+                    key_path=s.get("key_path")
+                )
+
         while True:
             host = questionary.text("🌐 IP адрес сервера (VDS):").ask()
             if not host:
@@ -86,6 +108,13 @@ class CLI:
                     password=password,
                     key_path=key_path,
                 )
+                
+                # Спрашиваем, сохранить ли сервер
+                save = questionary.confirm("Сохранить данные сервера для быстрого входа в будущем?").ask()
+                if save:
+                    ServerManager.save_server(creds)
+                    self.console.print("[dim green]Сервер успешно сохранен в saved_servers.json[/dim green]")
+                    
                 return creds
             except ValueError as e:
                 self.console.print("[bold red]Ошибка валидации введенных данных![/bold red]")
@@ -98,7 +127,7 @@ class CLI:
             "🛠 Какой прокси вы хотите установить?",
             choices=[
                 "MTProto Proxy (Telegram)",
-                "Amnezia WG (Будет в Итерации 2)",
+                "Amnezia WG",
                 "Выход",
             ],
         ).ask()
@@ -106,10 +135,7 @@ class CLI:
         if choice == "Выход":
             sys.exit(0)
         if choice and "Amnezia" in choice:
-            self.console.print(
-                "[yellow]Поддержка Amnezia WG ожидается во второй итерации! Возвращаемся к MTProto...[/yellow]"
-            )
-            return ProxyType.MTPROTO
+            return ProxyType.AMNEZIA_WG
         return ProxyType.MTPROTO
 
     def _print_dry_run(self, creds: ServerCredentials, proxy_type: ProxyType) -> None:
@@ -143,7 +169,9 @@ class CLI:
                 f"\n[dim]Сгенерированный секрет (как при реальной установке): {secret}[/dim]\n"
             )
 
-        for i, (title, cmd) in enumerate(plan_fn(), 1):
+        from typing import cast, Tuple
+        plan = cast(List[Tuple[str, str]], plan_fn())
+        for i, (title, cmd) in enumerate(plan, 1):
             self.console.print(f"\n[bold cyan]{i}. {title}[/bold cyan]")
             self.console.print(Panel(cmd, border_style="dim", title="bash"))
 
@@ -162,7 +190,7 @@ class CLI:
 
         link_fn = getattr(installer, "_generate_tg_link", None)
         if callable(link_fn):
-            link = link_fn(str(creds.host))
+            link = str(link_fn(creds.host))
             self.console.print("\n[bold blue]После успешной установки была бы такая ссылка для Telegram:[/bold blue]")
             self.console.print(Panel(link, border_style="green"))
 

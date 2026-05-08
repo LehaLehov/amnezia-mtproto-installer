@@ -20,10 +20,8 @@ def create_installer(proxy_type: ProxyType) -> BaseInstaller:
     if proxy_type == ProxyType.MTPROTO:
         return MTProtoInstaller()
     if proxy_type == ProxyType.AMNEZIA_WG:
-        raise InstallerUnavailableError(
-            "Amnezia WG пока в разработке — выберите MTProto или дождитесь обновления.",
-            proxy_type=proxy_type,
-        )
+        from .amnezia import AmneziaInstaller
+        return AmneziaInstaller()
     raise InstallerUnavailableError(
         f"Неизвестный тип прокси: {proxy_type!r}",
         proxy_type=proxy_type,
