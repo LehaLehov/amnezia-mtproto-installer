@@ -1,12 +1,13 @@
 """
 Точка входа в программу.
 """
-from proxy_installer.cli import CLI
+from proxy_installer.cli import CLI, parse_args
 
 
-def main():
+def main() -> None:
     """Запускает интерфейс приложения."""
-    app = CLI()
+    args = parse_args()
+    app = CLI(dry_run=args.dry_run)
     app.run()
 
 
