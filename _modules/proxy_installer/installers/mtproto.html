@@ -170,8 +170,13 @@
 <a class="viewcode-back" href="../../../proxy_installer.installers.html#proxy_installer.installers.MTProtoInstaller.build_install_plan">[документация]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">build_install_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Полный план для dry-run: те же шаги, что и при реальной установке (в том же порядке).</span>
-<span class="sd">        Пауза sleep(2) между restart и is-active — только в коде, отдельной строкой в плане.</span>
+<span class="sd">        Формирует полный план установки для режима dry-run.</span>
+
+<span class="sd">        План включает все реальные команды, которые будут выполнены на сервере,</span>
+<span class="sd">        а также техническую паузу перед проверкой статуса сервиса.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[Tuple[str, str]]: Список шагов в формате (описание, команда).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">plan</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_core_ssh_steps</span><span class="p">())</span>
         <span class="n">plan</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>

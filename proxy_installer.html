@@ -441,12 +441,15 @@
 <dl class="field-list simple">
 <dt class="field-odd">Параметры<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>command</strong> – Bash-команда для выполнения.</p></li>
-<li><p><strong>check_status</strong> – Если True, вызывает исключение при ненулевом коде возврата.</p></li>
+<li><p><strong>command</strong> (<em>str</em>) – Bash-команда для выполнения.</p></li>
+<li><p><strong>check_status</strong> (<em>bool</em>) – Если True, вызывает исключение при ненулевом коде возврата.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Результат<span class="colon">:</span></dt>
-<dd class="field-even"><p>Кортеж (код_возврата, stdout, stderr)</p>
+<dd class="field-even"><p>Кортеж (код_возврата, stdout, stderr).</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[int, str, str]</p>
 </dd>
 </dl>
 </dd></dl>

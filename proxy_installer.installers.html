@@ -120,9 +120,18 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="proxy_installer.installers.InstallerProtocol.install">
 <span class="sig-name descname"><span class="pre">install</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="proxy_installer.html#proxy_installer.ssh_client.ServerConnection" title="proxy_installer.ssh_client.ServerConnection"><span class="pre">ServerConnection</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="proxy_installer.html#proxy_installer.models.InstallationResult" title="proxy_installer.models.InstallationResult"><span class="pre">InstallationResult</span></a></span></span><a class="reference internal" href="_modules/proxy_installer/installers/base.html#InstallerProtocol.install"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.InstallerProtocol.install" title="Ссылка на это определение"></a></dt>
-<dd><p>Основной метод установки.
-:param connection: Экземпляр соединения ServerConnection (через paramiko).
-:return: InstallationResult с результатом деплоя.</p>
+<dd><p>Запускает процесс установки прокси на сервере.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>connection</strong> (<a class="reference internal" href="proxy_installer.html#proxy_installer.ssh_client.ServerConnection" title="proxy_installer.ssh_client.ServerConnection"><em>ServerConnection</em></a>) – Активное SSH-соединение с сервером.</p>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Итог установки (успех/провал, логи сервера и сгенерированный конфиг).</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="proxy_installer.html#proxy_installer.models.InstallationResult" title="proxy_installer.models.InstallationResult">InstallationResult</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -136,8 +145,17 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="proxy_installer.installers.MTProtoInstaller.build_install_plan">
 <span class="sig-name descname"><span class="pre">build_install_plan</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/proxy_installer/installers/mtproto.html#MTProtoInstaller.build_install_plan"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.MTProtoInstaller.build_install_plan" title="Ссылка на это определение"></a></dt>
-<dd><p>Полный план для dry-run: те же шаги, что и при реальной установке (в том же порядке).
-Пауза sleep(2) между restart и is-active — только в коде, отдельной строкой в плане.</p>
+<dd><p>Формирует полный план установки для режима dry-run.</p>
+<p>План включает все реальные команды, которые будут выполнены на сервере,
+а также техническую паузу перед проверкой статуса сервиса.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Результат<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Список шагов в формате (описание, команда).</p>
+</dd>
+<dt class="field-even">Тип результата<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[Tuple[str, str]]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
@@ -160,8 +178,17 @@
 <span class="sig-prename descclassname"><span class="pre">proxy_installer.installers.</span></span><span class="sig-name descname"><span class="pre">create_installer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proxy_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="proxy_installer.html#proxy_installer.models.ProxyType" title="proxy_installer.models.ProxyType"><span class="pre">ProxyType</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#proxy_installer.installers.base.BaseInstaller" title="proxy_installer.installers.base.BaseInstaller"><span class="pre">BaseInstaller</span></a></span></span><a class="reference internal" href="_modules/proxy_installer/installers/factory.html#create_installer"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.create_installer" title="Ссылка на это определение"></a></dt>
 <dd><p>Возвращает установщик для выбранного типа прокси.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Исключение<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="proxy_installer.html#proxy_installer.exceptions.InstallerUnavailableError" title="proxy_installer.exceptions.InstallerUnavailableError"><strong>InstallerUnavailableError</strong></a> – если тип пока не поддерживается.</p>
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>proxy_type</strong> – Тип прокси, для которого нужно создать установщик.</p>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Экземпляр установщика (MTProtoInstaller или AmneziaInstaller).</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#proxy_installer.installers.BaseInstaller" title="proxy_installer.installers.BaseInstaller">BaseInstaller</a></p>
+</dd>
+<dt class="field-even">Исключение<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="proxy_installer.html#proxy_installer.exceptions.InstallerUnavailableError" title="proxy_installer.exceptions.InstallerUnavailableError"><strong>InstallerUnavailableError</strong></a> – Если тип прокси не поддерживается.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -225,9 +252,18 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="proxy_installer.installers.base.InstallerProtocol.install">
 <span class="sig-name descname"><span class="pre">install</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="proxy_installer.html#proxy_installer.ssh_client.ServerConnection" title="proxy_installer.ssh_client.ServerConnection"><span class="pre">ServerConnection</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="proxy_installer.html#proxy_installer.models.InstallationResult" title="proxy_installer.models.InstallationResult"><span class="pre">InstallationResult</span></a></span></span><a class="reference internal" href="_modules/proxy_installer/installers/base.html#InstallerProtocol.install"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.base.InstallerProtocol.install" title="Ссылка на это определение"></a></dt>
-<dd><p>Основной метод установки.
-:param connection: Экземпляр соединения ServerConnection (через paramiko).
-:return: InstallationResult с результатом деплоя.</p>
+<dd><p>Запускает процесс установки прокси на сервере.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>connection</strong> (<a class="reference internal" href="proxy_installer.html#proxy_installer.ssh_client.ServerConnection" title="proxy_installer.ssh_client.ServerConnection"><em>ServerConnection</em></a>) – Активное SSH-соединение с сервером.</p>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Итог установки (успех/провал, логи сервера и сгенерированный конфиг).</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="proxy_installer.html#proxy_installer.models.InstallationResult" title="proxy_installer.models.InstallationResult">InstallationResult</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -237,14 +273,23 @@
 <span id="proxy-installer-installers-factory-module"></span><h2>proxy_installer.installers.factory module<a class="headerlink" href="#module-proxy_installer.installers.factory" title="Ссылка на этот заголовок"></a></h2>
 <p>Фабрика установщиков по типу прокси.</p>
 <p>Чтобы добавить новый тип: нужно расширить create_installer() (и сам класс установщика).
-Интерфейс (cli) трогать не нужно — он уже берёт установщик отсюда.</p>
+Интерфейс (cli) трогать не нужно - он уже берёт установщик отсюда.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="proxy_installer.installers.factory.create_installer">
 <span class="sig-prename descclassname"><span class="pre">proxy_installer.installers.factory.</span></span><span class="sig-name descname"><span class="pre">create_installer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proxy_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="proxy_installer.html#proxy_installer.models.ProxyType" title="proxy_installer.models.ProxyType"><span class="pre">ProxyType</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#proxy_installer.installers.base.BaseInstaller" title="proxy_installer.installers.base.BaseInstaller"><span class="pre">BaseInstaller</span></a></span></span><a class="reference internal" href="_modules/proxy_installer/installers/factory.html#create_installer"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.factory.create_installer" title="Ссылка на это определение"></a></dt>
 <dd><p>Возвращает установщик для выбранного типа прокси.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Исключение<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="proxy_installer.html#proxy_installer.exceptions.InstallerUnavailableError" title="proxy_installer.exceptions.InstallerUnavailableError"><strong>InstallerUnavailableError</strong></a> – если тип пока не поддерживается.</p>
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>proxy_type</strong> – Тип прокси, для которого нужно создать установщик.</p>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Экземпляр установщика (MTProtoInstaller или AmneziaInstaller).</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#proxy_installer.installers.BaseInstaller" title="proxy_installer.installers.BaseInstaller">BaseInstaller</a></p>
+</dd>
+<dt class="field-even">Исключение<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="proxy_installer.html#proxy_installer.exceptions.InstallerUnavailableError" title="proxy_installer.exceptions.InstallerUnavailableError"><strong>InstallerUnavailableError</strong></a> – Если тип прокси не поддерживается.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -263,8 +308,17 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="proxy_installer.installers.mtproto.MTProtoInstaller.build_install_plan">
 <span class="sig-name descname"><span class="pre">build_install_plan</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/proxy_installer/installers/mtproto.html#MTProtoInstaller.build_install_plan"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.mtproto.MTProtoInstaller.build_install_plan" title="Ссылка на это определение"></a></dt>
-<dd><p>Полный план для dry-run: те же шаги, что и при реальной установке (в том же порядке).
-Пауза sleep(2) между restart и is-active — только в коде, отдельной строкой в плане.</p>
+<dd><p>Формирует полный план установки для режима dry-run.</p>
+<p>План включает все реальные команды, которые будут выполнены на сервере,
+а также техническую паузу перед проверкой статуса сервиса.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Результат<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Список шагов в формате (описание, команда).</p>
+</dd>
+<dt class="field-even">Тип результата<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[Tuple[str, str]]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">

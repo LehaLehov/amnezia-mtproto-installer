@@ -95,8 +95,10 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">credentials</span><span class="p">:</span> <span class="n">ServerCredentials</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Инициализация подключения.</span>
-<span class="sd">        :param credentials: Валидированные креды.</span>
-<span class="sd">        :param timeout: Таймаут на операции подключения (секунды).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            credentials (ServerCredentials): Валидированные креды.</span>
+<span class="sd">            timeout (int): Таймаут на операции подключения в секундах.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span> <span class="o">=</span> <span class="n">credentials</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="n">timeout</span>
@@ -148,9 +150,12 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Выполняет команду на удаленном сервере и ждет ее завершения.</span>
 <span class="sd">        </span>
-<span class="sd">        :param command: Bash-команда для выполнения.</span>
-<span class="sd">        :param check_status: Если True, вызывает исключение при ненулевом коде возврата.</span>
-<span class="sd">        :return: Кортеж (код_возврата, stdout, stderr)</span>
+<span class="sd">        Args:</span>
+<span class="sd">            command (str): Bash-команда для выполнения.</span>
+<span class="sd">            check_status (bool): Если True, вызывает исключение при ненулевом коде возврата.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[int, str, str]: Кортеж (код_возврата, stdout, stderr).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SSHConnectionError</span><span class="p">(</span><span class="s2">&quot;Нет активного подключения к серверу.&quot;</span><span class="p">)</span>

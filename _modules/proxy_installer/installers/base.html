@@ -95,9 +95,13 @@
 <a class="viewcode-back" href="../../../proxy_installer.installers.html#proxy_installer.installers.InstallerProtocol.install">[документация]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">install</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection</span><span class="p">:</span> <span class="n">ServerConnection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InstallationResult</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Основной метод установки.</span>
-<span class="sd">        :param connection: Экземпляр соединения ServerConnection (через paramiko).</span>
-<span class="sd">        :return: InstallationResult с результатом деплоя.</span>
+<span class="sd">        Запускает процесс установки прокси на сервере.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            connection (ServerConnection): Активное SSH-соединение с сервером.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            InstallationResult: Итог установки (успех/провал, логи сервера и сгенерированный конфиг).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="o">...</span></div>
 </div>

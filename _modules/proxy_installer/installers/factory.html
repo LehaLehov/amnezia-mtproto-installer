@@ -74,7 +74,7 @@
 <span class="sd">Фабрика установщиков по типу прокси.</span>
 
 <span class="sd">Чтобы добавить новый тип: нужно расширить create_installer() (и сам класс установщика).</span>
-<span class="sd">Интерфейс (cli) трогать не нужно — он уже берёт установщик отсюда.</span>
+<span class="sd">Интерфейс (cli) трогать не нужно - он уже берёт установщик отсюда.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InstallerUnavailableError</span>
@@ -89,7 +89,14 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Возвращает установщик для выбранного типа прокси.</span>
 
-<span class="sd">    :raises InstallerUnavailableError: если тип пока не поддерживается.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        proxy_type: Тип прокси, для которого нужно создать установщик.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        BaseInstaller: Экземпляр установщика (MTProtoInstaller или AmneziaInstaller).</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        InstallerUnavailableError: Если тип прокси не поддерживается.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">proxy_type</span> <span class="o">==</span> <span class="n">ProxyType</span><span class="o">.</span><span class="n">MTPROTO</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">MTProtoInstaller</span><span class="p">()</span>
