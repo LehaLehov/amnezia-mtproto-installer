@@ -1,0 +1,317 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>proxy_installer.installers package &mdash; Proxy Installer  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="proxy_installer package" href="proxy_installer.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Proxy Installer
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">proxy_installer</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="proxy_installer.html">proxy_installer package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="proxy_installer.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">proxy_installer.installers package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="proxy_installer.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="proxy_installer.html#module-proxy_installer.cli">proxy_installer.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="proxy_installer.html#module-proxy_installer.exceptions">proxy_installer.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="proxy_installer.html#module-proxy_installer.models">proxy_installer.models module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="proxy_installer.html#module-proxy_installer.server_manager">proxy_installer.server_manager module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="proxy_installer.html#module-proxy_installer.ssh_client">proxy_installer.ssh_client module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Proxy Installer</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">proxy_installer</a></li>
+          <li class="breadcrumb-item"><a href="proxy_installer.html">proxy_installer package</a></li>
+      <li class="breadcrumb-item active">proxy_installer.installers package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/proxy_installer.installers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-proxy_installer.installers">
+<span id="proxy-installer-installers-package"></span><h1>proxy_installer.installers package<a class="headerlink" href="#module-proxy_installer.installers" title="Link to this heading"></a></h1>
+<p>Установщики различных протоколов.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="proxy_installer.installers.BaseInstaller">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">proxy_installer.installers.</span></span><span class="sig-name descname"><span class="pre">BaseInstaller</span></span><a class="reference internal" href="_modules/proxy_installer/installers/base.html#BaseInstaller"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#proxy_installer.installers.BaseInstaller" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Абстрактный базовый класс установщика.
+Интегрирует общие проверки и методы, чтобы избежать дублирования кода.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="proxy_installer.installers.BaseInstaller.SUPPORTED_OS">
+<span class="sig-name descname"><span class="pre">SUPPORTED_OS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['ubuntu',</span> <span class="pre">'debian']</span></span><a class="headerlink" href="#proxy_installer.installers.BaseInstaller.SUPPORTED_OS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="proxy_installer.installers.BaseInstaller.install">
+<span class="sig-name descname"><span class="pre">install</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="proxy_installer.html#proxy_installer.ssh_client.ServerConnection" title="proxy_installer.ssh_client.ServerConnection"><span class="pre">ServerConnection</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="proxy_installer.html#proxy_installer.models.InstallationResult" title="proxy_installer.models.InstallationResult"><span class="pre">InstallationResult</span></a></span></span><a class="reference internal" href="_modules/proxy_installer/installers/base.html#BaseInstaller.install"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#proxy_installer.installers.BaseInstaller.install" title="Link to this definition"></a></dt>
+<dd><p>Шаблонный метод для установки прокси.
+Выполняет базовые проверки, а затем делегирует работу подклассу.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="proxy_installer.installers.InstallerProtocol">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">proxy_installer.installers.</span></span><span class="sig-name descname"><span class="pre">InstallerProtocol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/proxy_installer/installers/base.html#InstallerProtocol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#proxy_installer.installers.InstallerProtocol" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Протокол, описывающий минимальный интерфейс установщика прокси.
+Любой класс-инсталлятор должен реализовывать метод install().</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="proxy_installer.installers.InstallerProtocol.install">
+<span class="sig-name descname"><span class="pre">install</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="proxy_installer.html#proxy_installer.ssh_client.ServerConnection" title="proxy_installer.ssh_client.ServerConnection"><span class="pre">ServerConnection</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="proxy_installer.html#proxy_installer.models.InstallationResult" title="proxy_installer.models.InstallationResult"><span class="pre">InstallationResult</span></a></span></span><a class="reference internal" href="_modules/proxy_installer/installers/base.html#InstallerProtocol.install"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#proxy_installer.installers.InstallerProtocol.install" title="Link to this definition"></a></dt>
+<dd><p>Основной метод установки.
+:param connection: Экземпляр соединения ServerConnection (через paramiko).
+:return: InstallationResult с результатом деплоя.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="proxy_installer.installers.MTProtoInstaller">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">proxy_installer.installers.</span></span><span class="sig-name descname"><span class="pre">MTProtoInstaller</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="proxy_installer.html#proxy_installer.models.MTProtoConfig" title="proxy_installer.models.MTProtoConfig"><span class="pre">MTProtoConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/proxy_installer/installers/mtproto.html#MTProtoInstaller"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#proxy_installer.installers.MTProtoInstaller" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#proxy_installer.installers.base.BaseInstaller" title="proxy_installer.installers.base.BaseInstaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseInstaller</span></code></a></p>
+<p>Класс для автоматизированной установки MTProto Proxy.
+Развертывает прокси, настраивает systemd сервис и запускает его.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="proxy_installer.installers.MTProtoInstaller.build_install_plan">
+<span class="sig-name descname"><span class="pre">build_install_plan</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/proxy_installer/installers/mtproto.html#MTProtoInstaller.build_install_plan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#proxy_installer.installers.MTProtoInstaller.build_install_plan" title="Link to this definition"></a></dt>
+<dd><p>Полный план для dry-run: те же шаги, что и при реальной установке (в том же порядке).
+Пауза sleep(2) между restart и is-active — только в коде, отдельной строкой в плане.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="proxy_installer.installers.MTProtoInstaller.config">
+<span class="sig-name descname"><span class="pre">config</span></span><a class="headerlink" href="#proxy_installer.installers.MTProtoInstaller.config" title="Link to this definition"></a></dt>
+<dd><p>Генерируем случайный секрет (16 байт -&gt; 32 hex-символа), если не передали свой.
+Для MTProto обычно хватает 16 байт.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="proxy_installer.installers.MTProtoInstaller.dry_run_failure_log_command">
+<span class="sig-name descname"><span class="pre">dry_run_failure_log_command</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/proxy_installer/installers/mtproto.html#MTProtoInstaller.dry_run_failure_log_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#proxy_installer.installers.MTProtoInstaller.dry_run_failure_log_command" title="Link to this definition"></a></dt>
+<dd><p>Команда journalctl, которую установщик выполняет при падении is-active (для вывода в dry-run).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="proxy_installer.installers.create_installer">
+<span class="sig-prename descclassname"><span class="pre">proxy_installer.installers.</span></span><span class="sig-name descname"><span class="pre">create_installer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proxy_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="proxy_installer.html#proxy_installer.models.ProxyType" title="proxy_installer.models.ProxyType"><span class="pre">ProxyType</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#proxy_installer.installers.base.BaseInstaller" title="proxy_installer.installers.base.BaseInstaller"><span class="pre">BaseInstaller</span></a></span></span><a class="reference internal" href="_modules/proxy_installer/installers/factory.html#create_installer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#proxy_installer.installers.create_installer" title="Link to this definition"></a></dt>
+<dd><p>Возвращает установщик для выбранного типа прокси.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="proxy_installer.html#proxy_installer.exceptions.InstallerUnavailableError" title="proxy_installer.exceptions.InstallerUnavailableError"><strong>InstallerUnavailableError</strong></a> – если тип пока не поддерживается.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-proxy_installer.installers.amnezia">
+<span id="proxy-installer-installers-amnezia-module"></span><h2>proxy_installer.installers.amnezia module<a class="headerlink" href="#module-proxy_installer.installers.amnezia" title="Link to this heading"></a></h2>
+<p>Установщик Amnezia WG.
+Наследуется от BaseInstaller, реализует шаги установки Amnezia WG (упрощенно через Docker).</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="proxy_installer.installers.amnezia.AmneziaInstaller">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">proxy_installer.installers.amnezia.</span></span><span class="sig-name descname"><span class="pre">AmneziaInstaller</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">51820</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/proxy_installer/installers/amnezia.html#AmneziaInstaller"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#proxy_installer.installers.amnezia.AmneziaInstaller" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#proxy_installer.installers.base.BaseInstaller" title="proxy_installer.installers.base.BaseInstaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseInstaller</span></code></a></p>
+<p>Класс для установки Amnezia WG.
+Развертывает контейнер и подготавливает директорию для ключей.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="proxy_installer.installers.amnezia.AmneziaInstaller.build_install_plan">
+<span class="sig-name descname"><span class="pre">build_install_plan</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/proxy_installer/installers/amnezia.html#AmneziaInstaller.build_install_plan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#proxy_installer.installers.amnezia.AmneziaInstaller.build_install_plan" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="proxy_installer.installers.amnezia.AmneziaInstaller.dry_run_failure_log_command">
+<span class="sig-name descname"><span class="pre">dry_run_failure_log_command</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/proxy_installer/installers/amnezia.html#AmneziaInstaller.dry_run_failure_log_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#proxy_installer.installers.amnezia.AmneziaInstaller.dry_run_failure_log_command" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-proxy_installer.installers.base">
+<span id="proxy-installer-installers-base-module"></span><h2>proxy_installer.installers.base module<a class="headerlink" href="#module-proxy_installer.installers.base" title="Link to this heading"></a></h2>
+<p>Базовый класс и протокол для всех установщиков прокси.
+Используется typing.Protocol для статической типизации интерфейсов.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="proxy_installer.installers.base.BaseInstaller">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">proxy_installer.installers.base.</span></span><span class="sig-name descname"><span class="pre">BaseInstaller</span></span><a class="reference internal" href="_modules/proxy_installer/installers/base.html#BaseInstaller"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#proxy_installer.installers.base.BaseInstaller" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Абстрактный базовый класс установщика.
+Интегрирует общие проверки и методы, чтобы избежать дублирования кода.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="proxy_installer.installers.base.BaseInstaller.SUPPORTED_OS">
+<span class="sig-name descname"><span class="pre">SUPPORTED_OS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['ubuntu',</span> <span class="pre">'debian']</span></span><a class="headerlink" href="#proxy_installer.installers.base.BaseInstaller.SUPPORTED_OS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="proxy_installer.installers.base.BaseInstaller.install">
+<span class="sig-name descname"><span class="pre">install</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="proxy_installer.html#proxy_installer.ssh_client.ServerConnection" title="proxy_installer.ssh_client.ServerConnection"><span class="pre">ServerConnection</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="proxy_installer.html#proxy_installer.models.InstallationResult" title="proxy_installer.models.InstallationResult"><span class="pre">InstallationResult</span></a></span></span><a class="reference internal" href="_modules/proxy_installer/installers/base.html#BaseInstaller.install"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#proxy_installer.installers.base.BaseInstaller.install" title="Link to this definition"></a></dt>
+<dd><p>Шаблонный метод для установки прокси.
+Выполняет базовые проверки, а затем делегирует работу подклассу.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="proxy_installer.installers.base.InstallerProtocol">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">proxy_installer.installers.base.</span></span><span class="sig-name descname"><span class="pre">InstallerProtocol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/proxy_installer/installers/base.html#InstallerProtocol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#proxy_installer.installers.base.InstallerProtocol" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Протокол, описывающий минимальный интерфейс установщика прокси.
+Любой класс-инсталлятор должен реализовывать метод install().</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="proxy_installer.installers.base.InstallerProtocol.install">
+<span class="sig-name descname"><span class="pre">install</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="proxy_installer.html#proxy_installer.ssh_client.ServerConnection" title="proxy_installer.ssh_client.ServerConnection"><span class="pre">ServerConnection</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="proxy_installer.html#proxy_installer.models.InstallationResult" title="proxy_installer.models.InstallationResult"><span class="pre">InstallationResult</span></a></span></span><a class="reference internal" href="_modules/proxy_installer/installers/base.html#InstallerProtocol.install"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#proxy_installer.installers.base.InstallerProtocol.install" title="Link to this definition"></a></dt>
+<dd><p>Основной метод установки.
+:param connection: Экземпляр соединения ServerConnection (через paramiko).
+:return: InstallationResult с результатом деплоя.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-proxy_installer.installers.factory">
+<span id="proxy-installer-installers-factory-module"></span><h2>proxy_installer.installers.factory module<a class="headerlink" href="#module-proxy_installer.installers.factory" title="Link to this heading"></a></h2>
+<p>Фабрика установщиков по типу прокси.</p>
+<p>Чтобы добавить новый тип: нужно расширить create_installer() (и сам класс установщика).
+Интерфейс (cli) трогать не нужно — он уже берёт установщик отсюда.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="proxy_installer.installers.factory.create_installer">
+<span class="sig-prename descclassname"><span class="pre">proxy_installer.installers.factory.</span></span><span class="sig-name descname"><span class="pre">create_installer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proxy_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="proxy_installer.html#proxy_installer.models.ProxyType" title="proxy_installer.models.ProxyType"><span class="pre">ProxyType</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#proxy_installer.installers.base.BaseInstaller" title="proxy_installer.installers.base.BaseInstaller"><span class="pre">BaseInstaller</span></a></span></span><a class="reference internal" href="_modules/proxy_installer/installers/factory.html#create_installer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#proxy_installer.installers.factory.create_installer" title="Link to this definition"></a></dt>
+<dd><p>Возвращает установщик для выбранного типа прокси.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="proxy_installer.html#proxy_installer.exceptions.InstallerUnavailableError" title="proxy_installer.exceptions.InstallerUnavailableError"><strong>InstallerUnavailableError</strong></a> – если тип пока не поддерживается.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-proxy_installer.installers.mtproto">
+<span id="proxy-installer-installers-mtproto-module"></span><h2>proxy_installer.installers.mtproto module<a class="headerlink" href="#module-proxy_installer.installers.mtproto" title="Link to this heading"></a></h2>
+<p>Установщик MTProto прокси.
+Наследуется от BaseInstaller, реализует шаги установки MTProto.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="proxy_installer.installers.mtproto.MTProtoInstaller">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">proxy_installer.installers.mtproto.</span></span><span class="sig-name descname"><span class="pre">MTProtoInstaller</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="proxy_installer.html#proxy_installer.models.MTProtoConfig" title="proxy_installer.models.MTProtoConfig"><span class="pre">MTProtoConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/proxy_installer/installers/mtproto.html#MTProtoInstaller"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#proxy_installer.installers.mtproto.MTProtoInstaller" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#proxy_installer.installers.base.BaseInstaller" title="proxy_installer.installers.base.BaseInstaller"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseInstaller</span></code></a></p>
+<p>Класс для автоматизированной установки MTProto Proxy.
+Развертывает прокси, настраивает systemd сервис и запускает его.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="proxy_installer.installers.mtproto.MTProtoInstaller.build_install_plan">
+<span class="sig-name descname"><span class="pre">build_install_plan</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/proxy_installer/installers/mtproto.html#MTProtoInstaller.build_install_plan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#proxy_installer.installers.mtproto.MTProtoInstaller.build_install_plan" title="Link to this definition"></a></dt>
+<dd><p>Полный план для dry-run: те же шаги, что и при реальной установке (в том же порядке).
+Пауза sleep(2) между restart и is-active — только в коде, отдельной строкой в плане.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="proxy_installer.installers.mtproto.MTProtoInstaller.config">
+<span class="sig-name descname"><span class="pre">config</span></span><a class="headerlink" href="#proxy_installer.installers.mtproto.MTProtoInstaller.config" title="Link to this definition"></a></dt>
+<dd><p>Генерируем случайный секрет (16 байт -&gt; 32 hex-символа), если не передали свой.
+Для MTProto обычно хватает 16 байт.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="proxy_installer.installers.mtproto.MTProtoInstaller.dry_run_failure_log_command">
+<span class="sig-name descname"><span class="pre">dry_run_failure_log_command</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/proxy_installer/installers/mtproto.html#MTProtoInstaller.dry_run_failure_log_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#proxy_installer.installers.mtproto.MTProtoInstaller.dry_run_failure_log_command" title="Link to this definition"></a></dt>
+<dd><p>Команда journalctl, которую установщик выполняет при падении is-active (для вывода в dry-run).</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="proxy_installer.html" class="btn btn-neutral float-left" title="proxy_installer package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Admin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

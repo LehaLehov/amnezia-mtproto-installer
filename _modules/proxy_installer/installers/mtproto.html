@@ -1,0 +1,273 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>proxy_installer.installers.mtproto &mdash; Proxy Installer  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Proxy Installer
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">proxy_installer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Proxy Installer</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">proxy_installer.installers.mtproto</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for proxy_installer.installers.mtproto</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Установщик MTProto прокси.</span>
+<span class="sd">Наследуется от BaseInstaller, реализует шаги установки MTProto.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">secrets</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseInstaller</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..ssh_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServerConnection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..models</span><span class="w"> </span><span class="kn">import</span> <span class="n">MTProtoConfig</span><span class="p">,</span> <span class="n">InstallationResult</span><span class="p">,</span> <span class="n">ProxyType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">SSHCommandError</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># Имя сервиса и официальный образ Telegram</span>
+<span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;mtproto-proxy.service&quot;</span>
+<span class="n">DOCKER_IMAGE</span> <span class="o">=</span> <span class="s2">&quot;telegrammessenger/proxy:latest&quot;</span>
+
+
+<div class="viewcode-block" id="MTProtoInstaller">
+<a class="viewcode-back" href="../../../proxy_installer.installers.html#proxy_installer.installers.MTProtoInstaller">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MTProtoInstaller</span><span class="p">(</span><span class="n">BaseInstaller</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Класс для автоматизированной установки MTProto Proxy.</span>
+<span class="sd">    Развертывает прокси, настраивает systemd сервис и запускает его.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MTProtoConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Инициализация установщика.</span>
+<span class="sd">        :param config: Настройки MTProto (порт, секрет). Если нет, сгенерирует по умолчанию.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="n">MTProtoConfig</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="mi">443</span><span class="p">)</span>
+<span class="w">        </span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Генерируем случайный секрет (16 байт -&gt; 32 hex-символа), если не передали свой.</span>
+<span class="sd">        Для MTProto обычно хватает 16 байт.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">secret</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">secret</span> <span class="o">=</span> <span class="n">secrets</span><span class="o">.</span><span class="n">token_hex</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_systemd_unit_content</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Текст unit-файла: docker-контейнер с официальным образом telegrammessenger/proxy.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;[Unit]</span>
+<span class="s2">Description=MTProto Proxy Service</span>
+<span class="s2">After=network.target docker.service</span>
+<span class="s2">Requires=docker.service</span>
+
+<span class="s2">[Service]</span>
+<span class="s2">Restart=always</span>
+<span class="s2">ExecStartPre=-/usr/bin/docker stop mtproto-proxy</span>
+<span class="s2">ExecStartPre=-/usr/bin/docker rm mtproto-proxy</span>
+<span class="s2">ExecStart=/usr/bin/docker run --name mtproto-proxy -p </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">port</span><span class="si">}</span><span class="s2">:443 --rm -e SECRET=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">secret</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">DOCKER_IMAGE</span><span class="si">}</span>
+<span class="s2">ExecStop=/usr/bin/docker stop -t 2 mtproto-proxy</span>
+
+<span class="s2">[Install]</span>
+<span class="s2">WantedBy=multi-user.target&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_write_unit_command</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Одна bash-команда: записать unit через heredoc.&quot;&quot;&quot;</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_systemd_unit_content</span><span class="p">()</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;cat &lt;&lt; &#39;EOF&#39; &gt; /etc/systemd/system/</span><span class="si">{</span><span class="n">SERVICE_NAME</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">body</span><span class="si">}</span><span class="se">\n</span><span class="s2">EOF&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_core_ssh_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Команды до финальной проверки (без systemctl is-active).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;Обновить пакеты и поставить зависимости&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;apt-get update -y &amp;&amp; apt-get install -y curl wget jq ca-certificates&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;Установить Docker, если его ещё нет&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;if ! command -v docker &amp;&gt; /dev/null; then curl -fsSL https://get.docker.com | bash; fi&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;Дождаться запуска docker daemon&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;while ! docker info &gt;/dev/null 2&gt;&amp;1; do sleep 1; done&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Создать /etc/systemd/system/</span><span class="si">{</span><span class="n">SERVICE_NAME</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_write_unit_command</span><span class="p">(),</span>
+            <span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;Перечитать конфиг systemd&quot;</span><span class="p">,</span> <span class="s2">&quot;systemctl daemon-reload&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Включить автозапуск </span><span class="si">{</span><span class="n">SERVICE_NAME</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;systemctl enable </span><span class="si">{</span><span class="n">SERVICE_NAME</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Перезапустить </span><span class="si">{</span><span class="n">SERVICE_NAME</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;systemctl restart </span><span class="si">{</span><span class="n">SERVICE_NAME</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_active_command</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="s2">&quot;Проверить, что сервис активен&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;systemctl is-active </span><span class="si">{</span><span class="n">SERVICE_NAME</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="MTProtoInstaller.build_install_plan">
+<a class="viewcode-back" href="../../../proxy_installer.installers.html#proxy_installer.installers.MTProtoInstaller.build_install_plan">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_install_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Полный план для dry-run: те же шаги, что и при реальной установке (в том же порядке).</span>
+<span class="sd">        Пауза sleep(2) между restart и is-active — только в коде, отдельной строкой в плане.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">plan</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_core_ssh_steps</span><span class="p">())</span>
+        <span class="n">plan</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;(локально в установщике: пауза 2 сек перед проверкой, на сервер не уходит)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;# sleep 2&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">plan</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_check_active_command</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">plan</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_tg_link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Формирует ссылку tg://proxy для быстрого подключения в Telegram.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;tg://proxy?server=</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">&amp;port=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">port</span><span class="si">}</span><span class="s2">&amp;secret=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">secret</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<div class="viewcode-block" id="MTProtoInstaller.dry_run_failure_log_command">
+<a class="viewcode-back" href="../../../proxy_installer.installers.html#proxy_installer.installers.MTProtoInstaller.dry_run_failure_log_command">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dry_run_failure_log_command</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Команда journalctl, которую установщик выполняет при падении is-active (для вывода в dry-run).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;journalctl -u </span><span class="si">{</span><span class="n">SERVICE_NAME</span><span class="si">}</span><span class="s2"> --no-pager -n 20&quot;</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_run_installation_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection</span><span class="p">:</span> <span class="n">ServerConnection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InstallationResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Шаги установки MTProto на сервере по SSH.</span>
+<span class="sd">        Те же команды, что в _core_ssh_steps / build_install_plan: apt, docker, unit systemd, проверка.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">title</span><span class="p">,</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_core_ssh_steps</span><span class="p">():</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+                <span class="n">logs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">title</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span><span class="p">)</span>
+                <span class="n">connection</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+            <span class="c1"># Небольшая пауза перед проверкой, чтобы unit успел подняться</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Проверка статуса сервиса...&quot;</span><span class="p">)</span>
+            <span class="n">logs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Проверка статуса...&quot;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">check_cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_active_command</span><span class="p">()</span>
+                <span class="n">connection</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span><span class="n">check_cmd</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">SSHCommandError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">logs_out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;journalctl -u </span><span class="si">{</span><span class="n">SERVICE_NAME</span><span class="si">}</span><span class="s2"> --no-pager -n 20&quot;</span><span class="p">,</span> <span class="n">check_status</span><span class="o">=</span><span class="kc">False</span>
+                <span class="p">)</span>
+                <span class="n">e</span><span class="o">.</span><span class="n">stderr</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Systemd Logs:</span><span class="se">\n</span><span class="si">{</span><span class="n">logs_out</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">raise</span> <span class="n">e</span>
+
+            <span class="n">tg_link</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_tg_link</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">connection</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">host</span><span class="p">))</span>
+
+            <span class="k">return</span> <span class="n">InstallationResult</span><span class="p">(</span>
+                <span class="n">proxy_type</span><span class="o">=</span><span class="n">ProxyType</span><span class="o">.</span><span class="n">MTPROTO</span><span class="p">,</span>
+                <span class="n">success</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">connection_links</span><span class="o">=</span><span class="p">[</span><span class="n">tg_link</span><span class="p">],</span>
+                <span class="n">logs</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">logs</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Установка успешно завершена!&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">except</span> <span class="n">SSHCommandError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Ошибка установки: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="n">logs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ошибка команды: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">command</span><span class="si">}</span><span class="se">\n</span><span class="s2">Stderr: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">stderr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">InstallationResult</span><span class="p">(</span>
+                <span class="n">proxy_type</span><span class="o">=</span><span class="n">ProxyType</span><span class="o">.</span><span class="n">MTPROTO</span><span class="p">,</span>
+                <span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">logs</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">logs</span><span class="p">),</span>
+            <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Admin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

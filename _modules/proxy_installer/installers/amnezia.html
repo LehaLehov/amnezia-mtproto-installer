@@ -1,0 +1,205 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>proxy_installer.installers.amnezia &mdash; Proxy Installer  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Proxy Installer
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">proxy_installer</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Proxy Installer</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">proxy_installer.installers.amnezia</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for proxy_installer.installers.amnezia</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Установщик Amnezia WG.</span>
+<span class="sd">Наследуется от BaseInstaller, реализует шаги установки Amnezia WG (упрощенно через Docker).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qrcode</span>  <span class="c1"># type: ignore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseInstaller</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..ssh_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">ServerConnection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..models</span><span class="w"> </span><span class="kn">import</span> <span class="n">InstallationResult</span><span class="p">,</span> <span class="n">ProxyType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">SSHCommandError</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="AmneziaInstaller">
+<a class="viewcode-back" href="../../../proxy_installer.installers.html#proxy_installer.installers.amnezia.AmneziaInstaller">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AmneziaInstaller</span><span class="p">(</span><span class="n">BaseInstaller</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Класс для установки Amnezia WG.</span>
+<span class="sd">    Развертывает контейнер и подготавливает директорию для ключей.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">51820</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
+        
+    <span class="k">def</span><span class="w"> </span><span class="nf">_core_ssh_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="p">(</span><span class="s2">&quot;Обновление пакетов&quot;</span><span class="p">,</span> <span class="s2">&quot;apt-get update -y &amp;&amp; apt-get install -y curl wget jq ca-certificates wireguard-tools&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;Установка Docker&quot;</span><span class="p">,</span> <span class="s2">&quot;if ! command -v docker &amp;&gt; /dev/null; then curl -fsSL https://get.docker.com | bash; fi&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;Создание конфиг-директории&quot;</span><span class="p">,</span> <span class="s2">&quot;mkdir -p /opt/amnezia-wg&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;Удаление старого контейнера (если есть)&quot;</span><span class="p">,</span> <span class="s2">&quot;docker rm -f amnezia-wg || true&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;Запуск контейнера Amnezia WG&quot;</span><span class="p">,</span>
+             <span class="sa">f</span><span class="s2">&quot;docker run -d --name amnezia-wg --cap-add=NET_ADMIN --cap-add=SYS_MODULE &quot;</span>
+             <span class="sa">f</span><span class="s2">&quot;-p </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="si">}</span><span class="s2">:51820/udp -v /opt/amnezia-wg:/etc/amnezia/amneziawg --restart always &quot;</span>
+             <span class="s2">&quot;amneziavpn/amnezia-wg:latest&quot;</span><span class="p">)</span>
+        <span class="p">]</span>
+        
+<div class="viewcode-block" id="AmneziaInstaller.build_install_plan">
+<a class="viewcode-back" href="../../../proxy_installer.installers.html#proxy_installer.installers.amnezia.AmneziaInstaller.build_install_plan">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_install_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+        <span class="n">plan</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_core_ssh_steps</span><span class="p">())</span>
+        <span class="n">plan</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;Проверка статуса&quot;</span><span class="p">,</span> <span class="s2">&quot;docker ps | grep amnezia-wg&quot;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">plan</span></div>
+
+        
+<div class="viewcode-block" id="AmneziaInstaller.dry_run_failure_log_command">
+<a class="viewcode-back" href="../../../proxy_installer.installers.html#proxy_installer.installers.amnezia.AmneziaInstaller.dry_run_failure_log_command">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dry_run_failure_log_command</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;docker logs amnezia-wg --tail 20&quot;</span></div>
+
+        
+    <span class="k">def</span><span class="w"> </span><span class="nf">_run_installation_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection</span><span class="p">:</span> <span class="n">ServerConnection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InstallationResult</span><span class="p">:</span>
+        <span class="n">logs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">title</span><span class="p">,</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_core_ssh_steps</span><span class="p">():</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+                <span class="n">logs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">title</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span><span class="p">)</span>
+                <span class="n">connection</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            
+            <span class="c1"># Простая проверка что контейнер запущен</span>
+            <span class="n">connection</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span><span class="s2">&quot;docker ps | grep amnezia-wg&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Генерация заглушки конфига клиента</span>
+            <span class="n">client_conf</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;[Interface]</span>
+<span class="s2">PrivateKey = (Нужно сгенерировать клиентский ключ)</span>
+<span class="s2">Address = 10.8.0.2/24</span>
+<span class="s2">DNS = 1.1.1.1</span>
+
+<span class="s2">[Peer]</span>
+<span class="s2">PublicKey = (Ваш публичный ключ сервера из /opt/amnezia-wg)</span>
+<span class="s2">Endpoint = </span><span class="si">{</span><span class="n">connection</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="si">}</span>
+<span class="s2">AllowedIPs = 0.0.0.0/0</span>
+<span class="s2">PersistentKeepalive = 25&quot;&quot;&quot;</span>
+
+            <span class="c1"># Создаем QR код из текста конфига</span>
+            <span class="n">qr</span> <span class="o">=</span> <span class="n">qrcode</span><span class="o">.</span><span class="n">QRCode</span><span class="p">()</span>
+            <span class="n">qr</span><span class="o">.</span><span class="n">add_data</span><span class="p">(</span><span class="n">client_conf</span><span class="p">)</span>
+            <span class="n">qr</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">fit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">buf</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+            <span class="n">qr</span><span class="o">.</span><span class="n">print_ascii</span><span class="p">(</span><span class="n">out</span><span class="o">=</span><span class="n">buf</span><span class="p">)</span>
+            <span class="n">qr_str</span> <span class="o">=</span> <span class="n">buf</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="n">InstallationResult</span><span class="p">(</span>
+                <span class="n">proxy_type</span><span class="o">=</span><span class="n">ProxyType</span><span class="o">.</span><span class="n">AMNEZIA_WG</span><span class="p">,</span>
+                <span class="n">success</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">connection_links</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Конфиги находятся в /opt/amnezia-wg на сервере.&quot;</span><span class="p">],</span>
+                <span class="n">logs</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">logs</span><span class="p">)</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Установка завершена. Пример конфига клиента:</span><span class="se">\n</span><span class="si">{</span><span class="n">client_conf</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">QR-код для сканирования телефоном:</span><span class="se">\n</span><span class="si">{</span><span class="n">qr_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="n">SSHCommandError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Ошибка установки: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="n">logs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ошибка команды: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">command</span><span class="si">}</span><span class="se">\n</span><span class="s2">Stderr: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">stderr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">InstallationResult</span><span class="p">(</span>
+                <span class="n">proxy_type</span><span class="o">=</span><span class="n">ProxyType</span><span class="o">.</span><span class="n">AMNEZIA_WG</span><span class="p">,</span>
+                <span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">logs</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">logs</span><span class="p">),</span>
+            <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Admin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
