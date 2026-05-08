@@ -13,7 +13,7 @@ def test_create_installer_mtproto() -> None:
     assert callable(getattr(inst, "build_install_plan"))
 
 
-def test_create_installer_amnezia_not_ready() -> None:
-    with pytest.raises(InstallerUnavailableError, match="Amnezia") as exc_info:
-        create_installer(ProxyType.AMNEZIA_WG)
-    assert exc_info.value.proxy_type == ProxyType.AMNEZIA_WG
+def test_create_installer_amnezia() -> None:
+    inst = create_installer(ProxyType.AMNEZIA_WG)
+    assert hasattr(inst, "build_install_plan")
+    assert callable(getattr(inst, "build_install_plan"))

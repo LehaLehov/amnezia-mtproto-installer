@@ -2,3 +2,4 @@ paramiko==3.4.0
 rich==13.7.1
 questionary==2.0.1
 pyperclip==1.8.2
+qrcode==7.4.2
