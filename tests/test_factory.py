@@ -1,8 +1,6 @@
 """Тесты фабрики установщиков."""
 
-import pytest
 
-from proxy_installer.exceptions import InstallerUnavailableError
 from proxy_installer.installers.factory import create_installer
 from proxy_installer.models import ProxyType
 

@@ -21,8 +21,10 @@ class ServerConnection:
     def __init__(self, credentials: ServerCredentials, timeout: int = 10):
         """
         Инициализация подключения.
-        :param credentials: Валидированные креды.
-        :param timeout: Таймаут на операции подключения (секунды).
+
+        Args:
+            credentials (ServerCredentials): Валидированные креды.
+            timeout (int): Таймаут на операции подключения в секундах.
         """
         self.credentials = credentials
         self.timeout = timeout
@@ -69,9 +71,12 @@ class ServerConnection:
         """
         Выполняет команду на удаленном сервере и ждет ее завершения.
         
-        :param command: Bash-команда для выполнения.
-        :param check_status: Если True, вызывает исключение при ненулевом коде возврата.
-        :return: Кортеж (код_возврата, stdout, stderr)
+        Args:
+            command (str): Bash-команда для выполнения.
+            check_status (bool): Если True, вызывает исключение при ненулевом коде возврата.
+            
+        Returns:
+            Tuple[int, str, str]: Кортеж (код_возврата, stdout, stderr).
         """
         if not self.is_connected:
             raise SSHConnectionError("Нет активного подключения к серверу.")

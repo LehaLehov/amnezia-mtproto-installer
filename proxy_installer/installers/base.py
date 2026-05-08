@@ -19,9 +19,13 @@ class InstallerProtocol(Protocol):
     """
     def install(self, connection: ServerConnection) -> InstallationResult:
         """
-        Основной метод установки.
-        :param connection: Экземпляр соединения ServerConnection (через paramiko).
-        :return: InstallationResult с результатом деплоя.
+        Запускает процесс установки прокси на сервере.
+
+        Args:
+            connection (ServerConnection): Активное SSH-соединение с сервером.
+
+        Returns:
+            InstallationResult: Итог установки (успех/провал, логи сервера и сгенерированный конфиг).
         """
         ...
 

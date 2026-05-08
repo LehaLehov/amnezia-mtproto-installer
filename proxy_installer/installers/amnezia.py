@@ -6,7 +6,7 @@
 import time
 import logging
 import io
-import qrcode
+import qrcode  # type: ignore
 from typing import List, Tuple
 
 from .base import BaseInstaller
@@ -32,7 +32,7 @@ class AmneziaInstaller(BaseInstaller):
             ("Установка Docker", "if ! command -v docker &> /dev/null; then curl -fsSL https://get.docker.com | bash; fi"),
             ("Создание конфиг-директории", "mkdir -p /opt/amnezia-wg"),
             ("Удаление старого контейнера (если есть)", "docker rm -f amnezia-wg || true"),
-            ("Запуск контейнера Amnezia WG", 
+            ("Запуск контейнера Amnezia WG",
              f"docker run -d --name amnezia-wg --cap-add=NET_ADMIN --cap-add=SYS_MODULE "
              f"-p {self.port}:51820/udp -v /opt/amnezia-wg:/etc/amnezia/amneziawg --restart always "
              "amneziavpn/amnezia-wg:latest")
