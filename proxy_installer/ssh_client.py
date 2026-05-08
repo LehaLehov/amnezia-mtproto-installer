@@ -76,6 +76,8 @@ class ServerConnection:
         if not self.is_connected:
             raise SSHConnectionError("Нет активного подключения к серверу.")
 
+        assert self._client is not None
+
         logger.debug(f"Executing: {command}")
         try:
             # paramiko's exec_command не является интерактивным, что идеально для скриптов
