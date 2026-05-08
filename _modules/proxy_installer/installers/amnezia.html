@@ -1,23 +1,24 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../../">
+<html class="writer-html5" lang="ru" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>proxy_installer.installers.amnezia &mdash; Proxy Installer  documentation</title>
+  <title>proxy_installer.installers.amnezia &mdash; документация Proxies Installer CLI by leha lehov </title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/documentation_options.js?v=372fde1a"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/translations.js?v=cd1d70c9"></script>
     <script src="../../../_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../search.html" /> 
+    <link rel="index" title="Алфавитный указатель" href="../../../genindex.html" />
+    <link rel="search" title="Поиск" href="../../../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -29,17 +30,17 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Proxy Installer
+            Proxies Installer CLI by leha lehov
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Поиск в документации" aria-label="Поиск в документации" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Содержание:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules.html">proxy_installer</a></li>
 </ul>
@@ -48,17 +49,17 @@
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Proxy Installer</a>
+          <a href="../../../index.html">Proxies Installer CLI by leha lehov</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+          <div role="navigation" aria-label="Навигация по страницам">
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Код модуля</a></li>
       <li class="breadcrumb-item active">proxy_installer.installers.amnezia</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -68,7 +69,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for proxy_installer.installers.amnezia</h1><div class="highlight"><pre>
+  <h1>Исходный код proxy_installer.installers.amnezia</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Установщик Amnezia WG.</span>
 <span class="sd">Наследуется от BaseInstaller, реализует шаги установки Amnezia WG (упрощенно через Docker).</span>
@@ -89,7 +90,7 @@
 
 
 <div class="viewcode-block" id="AmneziaInstaller">
-<a class="viewcode-back" href="../../../proxy_installer.installers.html#proxy_installer.installers.amnezia.AmneziaInstaller">[docs]</a>
+<a class="viewcode-back" href="../../../proxy_installer.installers.html#proxy_installer.installers.amnezia.AmneziaInstaller">[документация]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AmneziaInstaller</span><span class="p">(</span><span class="n">BaseInstaller</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Класс для установки Amnezia WG.</span>
@@ -112,7 +113,7 @@
         <span class="p">]</span>
         
 <div class="viewcode-block" id="AmneziaInstaller.build_install_plan">
-<a class="viewcode-back" href="../../../proxy_installer.installers.html#proxy_installer.installers.amnezia.AmneziaInstaller.build_install_plan">[docs]</a>
+<a class="viewcode-back" href="../../../proxy_installer.installers.html#proxy_installer.installers.amnezia.AmneziaInstaller.build_install_plan">[документация]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">build_install_plan</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
         <span class="n">plan</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_core_ssh_steps</span><span class="p">())</span>
         <span class="n">plan</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;Проверка статуса&quot;</span><span class="p">,</span> <span class="s2">&quot;docker ps | grep amnezia-wg&quot;</span><span class="p">))</span>
@@ -120,7 +121,7 @@
 
         
 <div class="viewcode-block" id="AmneziaInstaller.dry_run_failure_log_command">
-<a class="viewcode-back" href="../../../proxy_installer.installers.html#proxy_installer.installers.amnezia.AmneziaInstaller.dry_run_failure_log_command">[docs]</a>
+<a class="viewcode-back" href="../../../proxy_installer.installers.html#proxy_installer.installers.amnezia.AmneziaInstaller.dry_run_failure_log_command">[документация]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">dry_run_failure_log_command</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;docker logs amnezia-wg --tail 20&quot;</span></div>
 
@@ -182,12 +183,12 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2026, Admin.</p>
+    <p>&#169; Авторские права 2026, Leha lehov. </p>
   </div>
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
    
 
 </footer>

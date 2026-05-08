@@ -1,14 +1,14 @@
-Welcome to Proxy Installer's documentation!
-===========================================
+Документация Proxy Installer CLI (by Леха Лехов)
+=================================================
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Содержание:
 
    modules
 
-Indices and tables
-==================
+Индексы и поиск
+===============
 
 * :ref:`genindex`
 * :ref:`modindex`
