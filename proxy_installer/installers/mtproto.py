@@ -122,6 +122,12 @@ WantedBy=multi-user.target"""
         """Команда journalctl, которую установщик выполняет при падении is-active (для вывода в dry-run)."""
         return f"journalctl -u {SERVICE_NAME} --no-pager -n 20"
 
+    def get_firewall_instructions(self) -> str:
+        return (
+            f"[b]Для Selectel:[/b] Группы безопасности -> Входящий трафик -> Добавить правило "
+            f"(TCP, Порт {self.config.port}, Источник 0.0.0.0/0)."
+        )
+
     def _run_installation_steps(self, connection: ServerConnection) -> InstallationResult:
         """
         Шаги установки MTProto на сервере по SSH.

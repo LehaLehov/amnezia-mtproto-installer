@@ -45,6 +45,12 @@ class AmneziaInstaller(BaseInstaller):
         
     def dry_run_failure_log_command(self) -> str:
         return "docker logs amnezia-wg --tail 20"
+
+    def get_firewall_instructions(self) -> str:
+        return (
+            f"[b]Для Selectel:[/b] Группы безопасности -> Входящий трафик -> Добавить правило "
+            f"(UDP, Порт {self.port}, Источник 0.0.0.0/0)."
+        )
         
     def _run_installation_steps(self, connection: ServerConnection) -> InstallationResult:
         logs: List[str] = []

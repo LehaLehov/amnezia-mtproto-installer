@@ -29,6 +29,12 @@ class InstallerProtocol(Protocol):
         """
         ...
 
+    def get_firewall_instructions(self) -> str:
+        """
+        Возвращает строку с инструкциями по настройке файрвола для данного установщика.
+        """
+        ...
+
 
 class BaseInstaller(ABC):
     """
@@ -56,6 +62,10 @@ class BaseInstaller(ABC):
         Шаги установки конкретного прокси (должно быть реализовано в подклассе).
         """
         pass
+
+    def get_firewall_instructions(self) -> str:
+        """Инструкции по настройке файрвола. Переопределяется в подклассах."""
+        return ""
 
     def install(self, connection: ServerConnection) -> InstallationResult:
         """
