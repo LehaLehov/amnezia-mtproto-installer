@@ -87,8 +87,8 @@ def test_run_installation_steps_failure() -> None:
     
     # Симулируем ошибку при выполнении команды (например, при скачивании образа или проверке статуса)
     mock_conn.execute_command.side_effect = SSHCommandError(
-        command="some command", 
-        exit_status=1, 
+        command="some command",
+        exit_status=1,
         stderr="mocked stderr error"
     )
     

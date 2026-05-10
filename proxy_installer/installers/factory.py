@@ -18,13 +18,16 @@ from .amnezia import AmneziaInstaller
 # Реестр доступных прокси: {ProxyType: ("Отображаемое имя", Класс установщика)}
 _REGISTRY: Dict[ProxyType, Tuple[str, Callable[[], BaseInstaller]]] = {}
 
+
 def register(proxy_type: ProxyType, name: str, factory_func: Callable[[], BaseInstaller]):
     """Регистрирует новый установщик в фабрике."""
     _REGISTRY[proxy_type] = (name, factory_func)
 
+
 def get_available_proxies() -> Dict[ProxyType, str]:
     """Возвращает словарь доступных прокси {ProxyType: "Имя для меню"}."""
     return {pt: name for pt, (name, _) in _REGISTRY.items()}
+
 
 def create_installer(proxy_type: ProxyType) -> BaseInstaller:
     """
@@ -40,6 +43,7 @@ def create_installer(proxy_type: ProxyType) -> BaseInstaller:
         )
     _, factory_func = _REGISTRY[proxy_type]
     return factory_func()
+
 
 # --- Регистрация встроенных установщиков ---
 

@@ -2,7 +2,7 @@
 Модуль содержит логику CLI (Command Line Interface).
 """
 
-from typing import List, Optional
+from typing import List, Optional, cast, Tuple
 
 import argparse
 import sys
@@ -18,6 +18,7 @@ from .models import ServerCredentials, ProxyType
 from .ssh_client import ServerConnection
 from .exceptions import ProxyInstallerError, InstallerUnavailableError
 from .installers import create_installer
+from .installers.factory import get_available_proxies
 
 
 class CLI:
@@ -123,27 +124,27 @@ class CLI:
 
     def select_proxy_type(self) -> ProxyType:
         """Предлагает пользователю выбрать тип прокси для установки."""
+        proxies = get_available_proxies()
+        # Инвертируем словарь для questionary: Имя -> ProxyType
+        choices_map = {name: pt for pt, name in proxies.items()}
+        choices_list = list(choices_map.keys()) + ["Выход"]
+        
         choice = questionary.select(
             "🛠 Какой прокси вы хотите установить?",
-            choices=[
-                "MTProto Proxy (Telegram)",
-                "Amnezia WG",
-                "Выход",
-            ],
+            choices=choices_list,
         ).ask()
 
-        if choice == "Выход":
+        if choice == "Выход" or choice is None:
             sys.exit(0)
-        if choice and "Amnezia" in choice:
-            return ProxyType.AMNEZIA_WG
-        return ProxyType.MTPROTO
+            
+        return choices_map[choice]
 
     def _print_dry_run(self, creds: ServerCredentials, proxy_type: ProxyType) -> None:
         """Показать план команд без SSH (фича от ассиста)."""
         self.console.print(
             Panel(
                 "[bold yellow]Dry-run[/bold yellow]: подключения по SSH нет, на VDS ничего не выполняется и не меняется.\n"
-                "Ниже — те же команды, что отправились бы на сервер при обычной установке.",
+                "Ниже - те же команды, что отправились бы на сервер при обычной установке.",
                 title="Режим dry-run",
                 border_style="yellow",
             )
@@ -169,7 +170,6 @@ class CLI:
                 f"\n[dim]Сгенерированный секрет (как при реальной установке): {secret}[/dim]\n"
             )
 
-        from typing import cast, Tuple
         plan = cast(List[Tuple[str, str]], plan_fn())
         for i, (title, cmd) in enumerate(plan, 1):
             self.console.print(f"\n[bold cyan]{i}. {title}[/bold cyan]")
@@ -251,14 +251,13 @@ class CLI:
                         "Используйте ВПН для браузера, либо вставляйте прямиком в десктопный/мобильный клиент Telegram).[/dim red]"
                     )
 
-                    self.console.print("\n[bold magenta]🔌 Настройка портов (Firewall):[/bold magenta]")
-                    self.console.print(
-                        "Если прокси не подключается (бесконечное 'Соединение...'), убедитесь, что вы открыли порт в панели хостинга!"
-                    )
-                    self.console.print(
-                        "[b]Для Selectel:[/b] Группы безопасности -> Входящий трафик -> Добавить правило "
-                        "(TCP, Порт 443, Источник 0.0.0.0/0)."
-                    )
+                    fw_instructions = installer.get_firewall_instructions()
+                    if fw_instructions:
+                        self.console.print("\n[bold magenta]🔌 Настройка портов (Firewall):[/bold magenta]")
+                        self.console.print(
+                            "Если прокси не подключается (бесконечное 'Соединение...'), убедитесь, что вы открыли порт в панели хостинга!"
+                        )
+                        self.console.print(fw_instructions)
 
                     self.console.print("\n[dim]Логи установки:[/dim]")
                     self.console.print(Panel(result.logs, title="Logs", border_style="green"))

@@ -58,11 +58,11 @@ def test_run_installation_steps_failure() -> None:
     
     # Симулируем ошибку при выполнении команды (например, docker не установился)
     mock_conn.execute_command.side_effect = SSHCommandError(
-        command="docker run ...", 
-        exit_status=1, 
+        command="docker run ...",
+        exit_status=1,
         stderr="mocked stderr error"
     )
-    
+
     result = inst._run_installation_steps(mock_conn)
     
     assert result.success is False
