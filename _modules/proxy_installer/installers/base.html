@@ -104,6 +104,15 @@
 <span class="sd">            InstallationResult: Итог установки (успех/провал, логи сервера и сгенерированный конфиг).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="InstallerProtocol.get_firewall_instructions">
+<a class="viewcode-back" href="../../../proxy_installer.installers.html#proxy_installer.installers.InstallerProtocol.get_firewall_instructions">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_firewall_instructions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Возвращает строку с инструкциями по настройке файрвола для данного установщика.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span></div>
 </div>
 
 
@@ -136,6 +145,13 @@
 <span class="sd">        Шаги установки конкретного прокси (должно быть реализовано в подклассе).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
+
+<div class="viewcode-block" id="BaseInstaller.get_firewall_instructions">
+<a class="viewcode-back" href="../../../proxy_installer.installers.html#proxy_installer.installers.BaseInstaller.get_firewall_instructions">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_firewall_instructions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Инструкции по настройке файрвола. Переопределяется в подклассах.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+
 
 <div class="viewcode-block" id="BaseInstaller.install">
 <a class="viewcode-back" href="../../../proxy_installer.installers.html#proxy_installer.installers.BaseInstaller.install">[документация]</a>

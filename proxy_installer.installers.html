@@ -103,6 +103,12 @@
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="proxy_installer.installers.BaseInstaller.get_firewall_instructions">
+<span class="sig-name descname"><span class="pre">get_firewall_instructions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/proxy_installer/installers/base.html#BaseInstaller.get_firewall_instructions"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.BaseInstaller.get_firewall_instructions" title="Ссылка на это определение"></a></dt>
+<dd><p>Инструкции по настройке файрвола. Переопределяется в подклассах.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="proxy_installer.installers.BaseInstaller.install">
 <span class="sig-name descname"><span class="pre">install</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="proxy_installer.html#proxy_installer.ssh_client.ServerConnection" title="proxy_installer.ssh_client.ServerConnection"><span class="pre">ServerConnection</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="proxy_installer.html#proxy_installer.models.InstallationResult" title="proxy_installer.models.InstallationResult"><span class="pre">InstallationResult</span></a></span></span><a class="reference internal" href="_modules/proxy_installer/installers/base.html#BaseInstaller.install"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.BaseInstaller.install" title="Ссылка на это определение"></a></dt>
 <dd><p>Шаблонный метод для установки прокси.
@@ -117,6 +123,12 @@
 <dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
 <p>Протокол, описывающий минимальный интерфейс установщика прокси.
 Любой класс-инсталлятор должен реализовывать метод install().</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="proxy_installer.installers.InstallerProtocol.get_firewall_instructions">
+<span class="sig-name descname"><span class="pre">get_firewall_instructions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/proxy_installer/installers/base.html#InstallerProtocol.get_firewall_instructions"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.InstallerProtocol.get_firewall_instructions" title="Ссылка на это определение"></a></dt>
+<dd><p>Возвращает строку с инструкциями по настройке файрвола для данного установщика.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="proxy_installer.installers.InstallerProtocol.install">
 <span class="sig-name descname"><span class="pre">install</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="proxy_installer.html#proxy_installer.ssh_client.ServerConnection" title="proxy_installer.ssh_client.ServerConnection"><span class="pre">ServerConnection</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="proxy_installer.html#proxy_installer.models.InstallationResult" title="proxy_installer.models.InstallationResult"><span class="pre">InstallationResult</span></a></span></span><a class="reference internal" href="_modules/proxy_installer/installers/base.html#InstallerProtocol.install"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.InstallerProtocol.install" title="Ссылка на это определение"></a></dt>
@@ -171,24 +183,21 @@
 <dd><p>Команда journalctl, которую установщик выполняет при падении is-active (для вывода в dry-run).</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="proxy_installer.installers.MTProtoInstaller.get_firewall_instructions">
+<span class="sig-name descname"><span class="pre">get_firewall_instructions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/proxy_installer/installers/mtproto.html#MTProtoInstaller.get_firewall_instructions"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.MTProtoInstaller.get_firewall_instructions" title="Ссылка на это определение"></a></dt>
+<dd><p>Инструкции по настройке файрвола. Переопределяется в подклассах.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="proxy_installer.installers.create_installer">
 <span class="sig-prename descclassname"><span class="pre">proxy_installer.installers.</span></span><span class="sig-name descname"><span class="pre">create_installer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proxy_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="proxy_installer.html#proxy_installer.models.ProxyType" title="proxy_installer.models.ProxyType"><span class="pre">ProxyType</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#proxy_installer.installers.base.BaseInstaller" title="proxy_installer.installers.base.BaseInstaller"><span class="pre">BaseInstaller</span></a></span></span><a class="reference internal" href="_modules/proxy_installer/installers/factory.html#create_installer"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.create_installer" title="Ссылка на это определение"></a></dt>
-<dd><p>Возвращает установщик для выбранного типа прокси.</p>
+<dd><p>Возвращает экземпляр установщика для выбранного типа прокси.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Параметры<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>proxy_type</strong> – Тип прокси, для которого нужно создать установщик.</p>
-</dd>
-<dt class="field-even">Результат<span class="colon">:</span></dt>
-<dd class="field-even"><p>Экземпляр установщика (MTProtoInstaller или AmneziaInstaller).</p>
-</dd>
-<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#proxy_installer.installers.BaseInstaller" title="proxy_installer.installers.BaseInstaller">BaseInstaller</a></p>
-</dd>
-<dt class="field-even">Исключение<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="proxy_installer.html#proxy_installer.exceptions.InstallerUnavailableError" title="proxy_installer.exceptions.InstallerUnavailableError"><strong>InstallerUnavailableError</strong></a> – Если тип прокси не поддерживается.</p>
+<dt class="field-odd">Исключение<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="proxy_installer.html#proxy_installer.exceptions.InstallerUnavailableError" title="proxy_installer.exceptions.InstallerUnavailableError"><strong>InstallerUnavailableError</strong></a> – Если тип прокси не зарегистрирован.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -216,6 +225,12 @@
 <span class="sig-name descname"><span class="pre">dry_run_failure_log_command</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/proxy_installer/installers/amnezia.html#AmneziaInstaller.dry_run_failure_log_command"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.amnezia.AmneziaInstaller.dry_run_failure_log_command" title="Ссылка на это определение"></a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="proxy_installer.installers.amnezia.AmneziaInstaller.get_firewall_instructions">
+<span class="sig-name descname"><span class="pre">get_firewall_instructions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/proxy_installer/installers/amnezia.html#AmneziaInstaller.get_firewall_instructions"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.amnezia.AmneziaInstaller.get_firewall_instructions" title="Ссылка на это определение"></a></dt>
+<dd><p>Инструкции по настройке файрвола. Переопределяется в подклассах.</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -235,6 +250,12 @@
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="proxy_installer.installers.base.BaseInstaller.get_firewall_instructions">
+<span class="sig-name descname"><span class="pre">get_firewall_instructions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/proxy_installer/installers/base.html#BaseInstaller.get_firewall_instructions"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.base.BaseInstaller.get_firewall_instructions" title="Ссылка на это определение"></a></dt>
+<dd><p>Инструкции по настройке файрвола. Переопределяется в подклассах.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="proxy_installer.installers.base.BaseInstaller.install">
 <span class="sig-name descname"><span class="pre">install</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="proxy_installer.html#proxy_installer.ssh_client.ServerConnection" title="proxy_installer.ssh_client.ServerConnection"><span class="pre">ServerConnection</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="proxy_installer.html#proxy_installer.models.InstallationResult" title="proxy_installer.models.InstallationResult"><span class="pre">InstallationResult</span></a></span></span><a class="reference internal" href="_modules/proxy_installer/installers/base.html#BaseInstaller.install"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.base.BaseInstaller.install" title="Ссылка на это определение"></a></dt>
 <dd><p>Шаблонный метод для установки прокси.
@@ -249,6 +270,12 @@
 <dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
 <p>Протокол, описывающий минимальный интерфейс установщика прокси.
 Любой класс-инсталлятор должен реализовывать метод install().</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="proxy_installer.installers.base.InstallerProtocol.get_firewall_instructions">
+<span class="sig-name descname"><span class="pre">get_firewall_instructions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/proxy_installer/installers/base.html#InstallerProtocol.get_firewall_instructions"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.base.InstallerProtocol.get_firewall_instructions" title="Ссылка на это определение"></a></dt>
+<dd><p>Возвращает строку с инструкциями по настройке файрвола для данного установщика.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="proxy_installer.installers.base.InstallerProtocol.install">
 <span class="sig-name descname"><span class="pre">install</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="proxy_installer.html#proxy_installer.ssh_client.ServerConnection" title="proxy_installer.ssh_client.ServerConnection"><span class="pre">ServerConnection</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="proxy_installer.html#proxy_installer.models.InstallationResult" title="proxy_installer.models.InstallationResult"><span class="pre">InstallationResult</span></a></span></span><a class="reference internal" href="_modules/proxy_installer/installers/base.html#InstallerProtocol.install"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.base.InstallerProtocol.install" title="Ссылка на это определение"></a></dt>
@@ -272,26 +299,31 @@
 <section id="module-proxy_installer.installers.factory">
 <span id="proxy-installer-installers-factory-module"></span><h2>proxy_installer.installers.factory module<a class="headerlink" href="#module-proxy_installer.installers.factory" title="Ссылка на этот заголовок"></a></h2>
 <p>Фабрика установщиков по типу прокси.</p>
-<p>Чтобы добавить новый тип: нужно расширить create_installer() (и сам класс установщика).
-Интерфейс (cli) трогать не нужно - он уже берёт установщик отсюда.</p>
+<p>Реестр установщиков позволяет добавлять новые типы прокси без изменения CLI.
+При добавлении нового типа:
+1. Добавьте его в ProxyType.
+2. Зарегистрируйте в _REGISTRY ниже.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="proxy_installer.installers.factory.create_installer">
 <span class="sig-prename descclassname"><span class="pre">proxy_installer.installers.factory.</span></span><span class="sig-name descname"><span class="pre">create_installer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proxy_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="proxy_installer.html#proxy_installer.models.ProxyType" title="proxy_installer.models.ProxyType"><span class="pre">ProxyType</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#proxy_installer.installers.base.BaseInstaller" title="proxy_installer.installers.base.BaseInstaller"><span class="pre">BaseInstaller</span></a></span></span><a class="reference internal" href="_modules/proxy_installer/installers/factory.html#create_installer"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.factory.create_installer" title="Ссылка на это определение"></a></dt>
-<dd><p>Возвращает установщик для выбранного типа прокси.</p>
+<dd><p>Возвращает экземпляр установщика для выбранного типа прокси.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Параметры<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>proxy_type</strong> – Тип прокси, для которого нужно создать установщик.</p>
-</dd>
-<dt class="field-even">Результат<span class="colon">:</span></dt>
-<dd class="field-even"><p>Экземпляр установщика (MTProtoInstaller или AmneziaInstaller).</p>
-</dd>
-<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#proxy_installer.installers.BaseInstaller" title="proxy_installer.installers.BaseInstaller">BaseInstaller</a></p>
-</dd>
-<dt class="field-even">Исключение<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="proxy_installer.html#proxy_installer.exceptions.InstallerUnavailableError" title="proxy_installer.exceptions.InstallerUnavailableError"><strong>InstallerUnavailableError</strong></a> – Если тип прокси не поддерживается.</p>
+<dt class="field-odd">Исключение<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="proxy_installer.html#proxy_installer.exceptions.InstallerUnavailableError" title="proxy_installer.exceptions.InstallerUnavailableError"><strong>InstallerUnavailableError</strong></a> – Если тип прокси не зарегистрирован.</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="proxy_installer.installers.factory.get_available_proxies">
+<span class="sig-prename descclassname"><span class="pre">proxy_installer.installers.factory.</span></span><span class="sig-name descname"><span class="pre">get_available_proxies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="proxy_installer.html#proxy_installer.models.ProxyType" title="proxy_installer.models.ProxyType"><span class="pre">ProxyType</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/proxy_installer/installers/factory.html#get_available_proxies"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.factory.get_available_proxies" title="Ссылка на это определение"></a></dt>
+<dd><p>Возвращает словарь доступных прокси {ProxyType: «Имя для меню»}.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="proxy_installer.installers.factory.register">
+<span class="sig-prename descclassname"><span class="pre">proxy_installer.installers.factory.</span></span><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proxy_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="proxy_installer.html#proxy_installer.models.ProxyType" title="proxy_installer.models.ProxyType"><span class="pre">ProxyType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factory_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#proxy_installer.installers.base.BaseInstaller" title="proxy_installer.installers.base.BaseInstaller"><span class="pre">BaseInstaller</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/proxy_installer/installers/factory.html#register"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.factory.register" title="Ссылка на это определение"></a></dt>
+<dd><p>Регистрирует новый установщик в фабрике.</p>
 </dd></dl>
 
 </section>
@@ -332,6 +364,12 @@
 <dt class="sig sig-object py" id="proxy_installer.installers.mtproto.MTProtoInstaller.dry_run_failure_log_command">
 <span class="sig-name descname"><span class="pre">dry_run_failure_log_command</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/proxy_installer/installers/mtproto.html#MTProtoInstaller.dry_run_failure_log_command"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.mtproto.MTProtoInstaller.dry_run_failure_log_command" title="Ссылка на это определение"></a></dt>
 <dd><p>Команда journalctl, которую установщик выполняет при падении is-active (для вывода в dry-run).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="proxy_installer.installers.mtproto.MTProtoInstaller.get_firewall_instructions">
+<span class="sig-name descname"><span class="pre">get_firewall_instructions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/proxy_installer/installers/mtproto.html#MTProtoInstaller.get_firewall_instructions"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#proxy_installer.installers.mtproto.MTProtoInstaller.get_firewall_instructions" title="Ссылка на это определение"></a></dt>
+<dd><p>Инструкции по настройке файрвола. Переопределяется в подклассах.</p>
 </dd></dl>
 
 </dd></dl>
