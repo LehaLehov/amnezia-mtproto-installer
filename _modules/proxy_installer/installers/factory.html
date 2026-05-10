@@ -90,6 +90,7 @@
 <span class="c1"># Реестр доступных прокси: {ProxyType: (&quot;Отображаемое имя&quot;, Класс установщика)}</span>
 <span class="n">_REGISTRY</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">ProxyType</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">BaseInstaller</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
 
+
 <div class="viewcode-block" id="register">
 <a class="viewcode-back" href="../../../proxy_installer.installers.html#proxy_installer.installers.register">[документация]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="n">proxy_type</span><span class="p">:</span> <span class="n">ProxyType</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">factory_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">BaseInstaller</span><span class="p">]):</span>
@@ -97,11 +98,13 @@
     <span class="n">_REGISTRY</span><span class="p">[</span><span class="n">proxy_type</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">factory_func</span><span class="p">)</span></div>
 
 
+
 <div class="viewcode-block" id="get_available_proxies">
 <a class="viewcode-back" href="../../../proxy_installer.installers.html#proxy_installer.installers.get_available_proxies">[документация]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_available_proxies</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">ProxyType</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Возвращает словарь доступных прокси {ProxyType: &quot;Имя для меню&quot;}.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{</span><span class="n">pt</span><span class="p">:</span> <span class="n">name</span> <span class="k">for</span> <span class="n">pt</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="n">_REGISTRY</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
+
 
 
 <div class="viewcode-block" id="create_installer">
@@ -120,6 +123,7 @@
         <span class="p">)</span>
     <span class="n">_</span><span class="p">,</span> <span class="n">factory_func</span> <span class="o">=</span> <span class="n">_REGISTRY</span><span class="p">[</span><span class="n">proxy_type</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">factory_func</span><span class="p">()</span></div>
+
 
 
 <span class="c1"># --- Регистрация встроенных установщиков ---</span>
