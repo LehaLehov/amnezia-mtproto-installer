@@ -105,9 +105,31 @@
             <span class="p">(</span><span class="s2">&quot;Обновление пакетов&quot;</span><span class="p">,</span> <span class="s2">&quot;apt-get update -y &amp;&amp; apt-get install -y curl wget jq ca-certificates wireguard-tools&quot;</span><span class="p">),</span>
             <span class="p">(</span><span class="s2">&quot;Установка Docker&quot;</span><span class="p">,</span> <span class="s2">&quot;if ! command -v docker &amp;&gt; /dev/null; then curl -fsSL https://get.docker.com | bash; fi&quot;</span><span class="p">),</span>
             <span class="p">(</span><span class="s2">&quot;Создание конфиг-директории&quot;</span><span class="p">,</span> <span class="s2">&quot;mkdir -p /opt/amnezia-wg&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;Генерация серверного конфига (если нет)&quot;</span><span class="p">,</span> 
+             <span class="s2">&quot;if [ ! -f /opt/amnezia-wg/amneziawg0.conf ]; then &quot;</span>
+             <span class="s2">&quot;SERVER_PRIVKEY=$(wg genkey); &quot;</span>
+             <span class="s2">&quot;cat &lt;&lt;EOF &gt; /opt/amnezia-wg/amneziawg0.conf</span><span class="se">\n</span><span class="s2">&quot;</span>
+             <span class="s2">&quot;[Interface]</span><span class="se">\n</span><span class="s2">&quot;</span>
+             <span class="s2">&quot;Address = 10.8.0.1/24</span><span class="se">\n</span><span class="s2">&quot;</span>
+             <span class="sa">f</span><span class="s2">&quot;ListenPort = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+             <span class="s2">&quot;PrivateKey = $SERVER_PRIVKEY</span><span class="se">\n</span><span class="s2">&quot;</span>
+             <span class="s2">&quot;Jc = 120</span><span class="se">\n</span><span class="s2">&quot;</span>
+             <span class="s2">&quot;Jmin = 23</span><span class="se">\n</span><span class="s2">&quot;</span>
+             <span class="s2">&quot;Jmax = 911</span><span class="se">\n</span><span class="s2">&quot;</span>
+             <span class="s2">&quot;S1 = 49</span><span class="se">\n</span><span class="s2">&quot;</span>
+             <span class="s2">&quot;S2 = 49</span><span class="se">\n</span><span class="s2">&quot;</span>
+             <span class="s2">&quot;H1 = 1</span><span class="se">\n</span><span class="s2">&quot;</span>
+             <span class="s2">&quot;H2 = 2</span><span class="se">\n</span><span class="s2">&quot;</span>
+             <span class="s2">&quot;H3 = 3</span><span class="se">\n</span><span class="s2">&quot;</span>
+             <span class="s2">&quot;H4 = 4</span><span class="se">\n</span><span class="s2">&quot;</span>
+             <span class="s2">&quot;PostUp = iptables -A FORWARD -i </span><span class="si">%i</span><span class="s2"> -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE</span><span class="se">\n</span><span class="s2">&quot;</span>
+             <span class="s2">&quot;PostDown = iptables -D FORWARD -i </span><span class="si">%i</span><span class="s2"> -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE</span><span class="se">\n</span><span class="s2">&quot;</span>
+             <span class="s2">&quot;EOF</span><span class="se">\n</span><span class="s2">&quot;</span>
+             <span class="s2">&quot;fi&quot;</span><span class="p">),</span>
             <span class="p">(</span><span class="s2">&quot;Удаление старого контейнера (если есть)&quot;</span><span class="p">,</span> <span class="s2">&quot;docker rm -f amnezia-wg || true&quot;</span><span class="p">),</span>
             <span class="p">(</span><span class="s2">&quot;Запуск контейнера Amnezia WG&quot;</span><span class="p">,</span>
              <span class="sa">f</span><span class="s2">&quot;docker run -d --name amnezia-wg --cap-add=NET_ADMIN --cap-add=SYS_MODULE &quot;</span>
+             <span class="sa">f</span><span class="s2">&quot;--sysctl=</span><span class="se">\&quot;</span><span class="s2">net.ipv4.ip_forward=1</span><span class="se">\&quot;</span><span class="s2"> --sysctl=</span><span class="se">\&quot;</span><span class="s2">net.ipv4.conf.all.src_valid_mark=1</span><span class="se">\&quot;</span><span class="s2"> &quot;</span>
              <span class="sa">f</span><span class="s2">&quot;-p </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="si">}</span><span class="s2">:51820/udp -v /opt/amnezia-wg:/etc/amnezia/amneziawg --restart always &quot;</span>
              <span class="s2">&quot;amneziavpn/amnezia-wg:latest&quot;</span><span class="p">)</span>
         <span class="p">]</span>
@@ -145,17 +167,105 @@
 
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
             
-            <span class="c1"># Простая проверка что контейнер запущен</span>
+            <span class="c1"># проверка что контейнер запущен</span>
             <span class="n">connection</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span><span class="s2">&quot;docker ps | grep amnezia-wg&quot;</span><span class="p">)</span>
             
-            <span class="c1"># Генерация заглушки конфига клиента</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            
+            <span class="c1"># Генерация ключей клиента</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">client_privkey</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span><span class="s2">&quot;wg genkey&quot;</span><span class="p">,</span> <span class="n">check_status</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">client_privkey</span> <span class="o">=</span> <span class="n">client_privkey</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            
+            <span class="n">_</span><span class="p">,</span> <span class="n">client_pubkey</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;echo &#39;</span><span class="si">{</span><span class="n">client_privkey</span><span class="si">}</span><span class="s2">&#39; | wg pubkey&quot;</span><span class="p">,</span> <span class="n">check_status</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">client_pubkey</span> <span class="o">=</span> <span class="n">client_pubkey</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            
+            <span class="c1"># Получение публичного ключа сервера(изначально пусть ошибка)</span>
+            <span class="n">server_pubkey</span> <span class="o">=</span> <span class="s2">&quot;(Не удалось получить публичный ключ сервера)&quot;</span>
+            
+            <span class="c1"># попытка прочитать конфиг</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">wg0_content</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span><span class="s2">&quot;cat /opt/amnezia-wg/*.conf 2&gt;/dev/null&quot;</span><span class="p">,</span> <span class="n">check_status</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            
+            <span class="n">server_privkey</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">wg0_content</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;PrivateKey&quot;</span><span class="p">):</span>
+                    <span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+                        <span class="n">server_privkey</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                        <span class="k">break</span>
+            
+            <span class="n">is_valid</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">server_privkey</span><span class="p">:</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">srv_pub</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;echo &#39;</span><span class="si">{</span><span class="n">server_privkey</span><span class="si">}</span><span class="s2">&#39; | wg pubkey&quot;</span><span class="p">,</span> <span class="n">check_status</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">srv_pub</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">&quot;Key is not&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">err</span><span class="p">:</span>
+                    <span class="n">server_pubkey</span> <span class="o">=</span> <span class="n">srv_pub</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">is_valid</span> <span class="o">=</span> <span class="kc">True</span>
+            
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_valid</span><span class="p">:</span>
+                <span class="c1"># Если ключа нет, он пустой, или он невалидный (например $SERVER_PRIVKEY текстом)</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">new_priv</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span><span class="s2">&quot;wg genkey&quot;</span><span class="p">,</span> <span class="n">check_status</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">server_privkey</span> <span class="o">=</span> <span class="n">new_priv</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                
+                <span class="n">_</span><span class="p">,</span> <span class="n">srv_pub</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;echo &#39;</span><span class="si">{</span><span class="n">server_privkey</span><span class="si">}</span><span class="s2">&#39; | wg pubkey&quot;</span><span class="p">,</span> <span class="n">check_status</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">server_pubkey</span> <span class="o">=</span> <span class="n">srv_pub</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                
+                <span class="c1"># Принудительная прописка ключа в конфиг сервера</span>
+                <span class="n">fix_cmd</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="s2">&quot;CONF_FILE=$(ls /opt/amnezia-wg/*.conf 2&gt;/dev/null | head -n 1); &quot;</span>
+                    <span class="s2">&quot;if [ -z </span><span class="se">\&quot;</span><span class="s2">$CONF_FILE</span><span class="se">\&quot;</span><span class="s2"> ]; then CONF_FILE=/opt/amnezia-wg/amneziawg0.conf; fi; &quot;</span>
+                    <span class="s2">&quot;if [ -f </span><span class="se">\&quot;</span><span class="s2">$CONF_FILE</span><span class="se">\&quot;</span><span class="s2"> ]; then &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;if grep -q &#39;^PrivateKey&#39; </span><span class="se">\&quot;</span><span class="s2">$CONF_FILE</span><span class="se">\&quot;</span><span class="s2">; then &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;sed -i &#39;s|^PrivateKey.*|PrivateKey = </span><span class="si">{</span><span class="n">server_privkey</span><span class="si">}</span><span class="s2">|&#39; </span><span class="se">\&quot;</span><span class="s2">$CONF_FILE</span><span class="se">\&quot;</span><span class="s2">; &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;else printf &#39;PrivateKey = %s</span><span class="se">\\</span><span class="s2">n&#39; </span><span class="se">\&quot;</span><span class="si">{</span><span class="n">server_privkey</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2"> &gt;&gt; </span><span class="se">\&quot;</span><span class="s2">$CONF_FILE</span><span class="se">\&quot;</span><span class="s2">; fi; &quot;</span>
+                    <span class="s2">&quot;else &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;printf &#39;[Interface]</span><span class="se">\\</span><span class="s2">nPrivateKey = %s</span><span class="se">\\</span><span class="s2">nAddress = 10.8.0.1/24</span><span class="se">\\</span><span class="s2">nListenPort = 51820</span><span class="se">\\</span><span class="s2">n&#39; </span><span class="se">\&quot;</span><span class="si">{</span><span class="n">server_privkey</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2"> &gt; </span><span class="se">\&quot;</span><span class="s2">$CONF_FILE</span><span class="se">\&quot;</span><span class="s2">; &quot;</span>
+                    <span class="s2">&quot;fi; &quot;</span>
+                    <span class="s2">&quot;docker restart amnezia-wg;&quot;</span>
+                <span class="p">)</span>
+                <span class="n">connection</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span><span class="n">fix_cmd</span><span class="p">,</span> <span class="n">check_status</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+                
+            <span class="n">_</span><span class="p">,</span> <span class="n">obfuscation_params</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span>
+                <span class="s2">&quot;awk -F&#39;=&#39; &#39;/^[[:space:]]*(Jc|Jmin|Jmax|S1|S2|H1|H2|H3|H4)/ {print $0}&#39; /opt/amnezia-wg/*.conf 2&gt;/dev/null&quot;</span><span class="p">,</span> 
+                <span class="n">check_status</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span>
+            <span class="n">obfuscation_str</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">obfuscation_params</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">if</span> <span class="n">obfuscation_params</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+
+            <span class="c1"># Расчет локального айпи для нового клиента (чтобы не было конфликтов при повторном запуске)</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">peer_count_str</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span>
+                <span class="s2">&quot;grep -c &#39;</span><span class="se">\\</span><span class="s2">[Peer</span><span class="se">\\</span><span class="s2">]&#39; /opt/amnezia-wg/*.conf 2&gt;/dev/null | awk -F&#39;:&#39; &#39;{sum+=$2} END {print sum}&#39;&quot;</span><span class="p">,</span>
+                <span class="n">check_status</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">peer_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">peer_count_str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">peer_count</span> <span class="o">=</span> <span class="mi">0</span>
+            
+            <span class="n">client_ip_last_octet</span> <span class="o">=</span> <span class="n">peer_count</span> <span class="o">+</span> <span class="mi">2</span>
+            <span class="k">if</span> <span class="n">client_ip_last_octet</span> <span class="o">&gt;</span> <span class="mi">254</span><span class="p">:</span>
+                <span class="n">client_ip_last_octet</span> <span class="o">=</span> <span class="mi">254</span> <span class="c1"># Ограничение простой сети /24 единицы в маске</span>
+            <span class="n">client_ip</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;10.8.0.</span><span class="si">{</span><span class="n">client_ip_last_octet</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="c1"># Добавление пира на сервер, если конфиг существует</span>
+            <span class="n">add_peer_cmd</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;CONF_FILE=$(ls /opt/amnezia-wg/*.conf 2&gt;/dev/null | head -n 1); &quot;</span>
+                <span class="s2">&quot;if [ -n </span><span class="se">\&quot;</span><span class="s2">$CONF_FILE</span><span class="se">\&quot;</span><span class="s2"> ]; then &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;if ! grep -q &#39;</span><span class="si">{</span><span class="n">client_pubkey</span><span class="si">}</span><span class="s2">&#39; </span><span class="se">\&quot;</span><span class="s2">$CONF_FILE</span><span class="se">\&quot;</span><span class="s2">; then &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;printf &#39;</span><span class="se">\\</span><span class="s2">n[Peer]</span><span class="se">\\</span><span class="s2">nPublicKey = %s</span><span class="se">\\</span><span class="s2">nAllowedIPs = %s/32</span><span class="se">\\</span><span class="s2">n&#39; </span><span class="se">\&quot;</span><span class="si">{</span><span class="n">client_pubkey</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2"> </span><span class="se">\&quot;</span><span class="si">{</span><span class="n">client_ip</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2"> &gt;&gt; </span><span class="se">\&quot;</span><span class="s2">$CONF_FILE</span><span class="se">\&quot;</span><span class="s2">; &quot;</span>
+                <span class="s2">&quot;docker restart amnezia-wg; &quot;</span>
+                <span class="s2">&quot;fi; &quot;</span>
+                <span class="s2">&quot;fi&quot;</span>
+            <span class="p">)</span>
+            <span class="n">connection</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span><span class="n">add_peer_cmd</span><span class="p">,</span> <span class="n">check_status</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            
+            <span class="c1"># Генерация конфига клиента</span>
             <span class="n">client_conf</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;[Interface]</span>
-<span class="s2">PrivateKey = (Нужно сгенерировать клиентский ключ)</span>
-<span class="s2">Address = 10.8.0.2/24</span>
-<span class="s2">DNS = 1.1.1.1</span>
+<span class="s2">PrivateKey = </span><span class="si">{</span><span class="n">client_privkey</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">client_privkey</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;(Ошибка генерации)&#39;</span><span class="si">}</span>
+<span class="s2">Address = </span><span class="si">{</span><span class="n">client_ip</span><span class="si">}</span><span class="s2">/24</span>
+<span class="s2">DNS = 1.1.1.1</span><span class="si">{</span><span class="n">obfuscation_str</span><span class="si">}</span>
 
 <span class="s2">[Peer]</span>
-<span class="s2">PublicKey = (Ваш публичный ключ сервера из /opt/amnezia-wg)</span>
+<span class="s2">PublicKey = </span><span class="si">{</span><span class="n">server_pubkey</span><span class="si">}</span>
 <span class="s2">Endpoint = </span><span class="si">{</span><span class="n">connection</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="si">}</span>
 <span class="s2">AllowedIPs = 0.0.0.0/0</span>
 <span class="s2">PersistentKeepalive = 25&quot;&quot;&quot;</span>
