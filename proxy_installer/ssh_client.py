@@ -11,7 +11,7 @@ from rich.console import Console
 from .models import ServerCredentials
 from .exceptions import SSHConnectionError, SSHAuthenticationError, SSHCommandError
 
-# Настроим логгер (хотя можно вынести его конфигурацию)
+# Настроим логгер
 logger = logging.getLogger(__name__)
 
 
@@ -85,7 +85,6 @@ class ServerConnection:
 
         logger.debug(f"Executing: {command}")
         try:
-            # paramiko's exec_command не является интерактивным, что идеально для скриптов
             stdin, stdout, stderr = self._client.exec_command(command, timeout=300)
             
             exit_status = stdout.channel.recv_exit_status()
@@ -107,7 +106,6 @@ class ServerConnection:
         Возвращает идентификатор ОС (например, 'ubuntu', 'debian', 'centos').
         """
         try:
-            # Читаем /etc/os-release
             _, stdout, _ = self.execute_command("cat /etc/os-release | grep '^ID='", check_status=False)
             if stdout:
                 return stdout.split('=')[1].strip().strip('"').strip("'").lower()
